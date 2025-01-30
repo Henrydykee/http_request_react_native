@@ -1,17 +1,33 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import ExpenseInterface from "../interface/expense_interface";
 import { GlobalStyles } from "../utils/style";
+import {NavigationProp, useNavigation} from "@react-navigation/native"
 
+
+
+type RootStackParamList = {
+    'Manage Expense': { };
+  };
 
 function ExpenseItem({ expense }: { expense: ExpenseInterface }) {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    
+
+    function expensePressHandler(){
+        navigation.navigate('Manage Expense', { "": "" })
+    }
+
+
     return (
-        <Pressable>
+        <Pressable onPress={expensePressHandler}>
             <View  style= {styles.expenseItem}>
+                <View>
                 <Text style={[styles.textBase , styles.textDescription]} >{expense.description}</Text>
                 <Text style={styles.textBase}>{expense.date.toDateString()}</Text>
+                </View>
                 <View>
                 <View style={styles.amountContainer}>
-                    <Text style ={styles.amountText}>{expense.amount}</Text>
+                    <Text style ={styles.amountText}>${expense.amount.toFixed(2)}</Text>
                 </View>
             </View>
             </View>
@@ -57,6 +73,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 4,
+        minWidth : 80
     },
     amountText: {
         fontSize: 18,

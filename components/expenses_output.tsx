@@ -27,7 +27,8 @@ export default ExpenseOutput;
 
 const styles = StyleSheet.create({
     container: {
-        padding: 24,
+        paddingHorizontal : 24,
+        paddingTop : 24,
         backgroundColor: GlobalStyles.colors.primary700,
         // height: Dimensions.get("screen").height
         flex: 1
