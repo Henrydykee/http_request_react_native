@@ -28,9 +28,8 @@ export default function App() {
             <AddExpenseButton
               onPress={() => {
                 navigation.navigate("Manage Expense", { n: navigation });
-              }}
-              icon="add"
-            />
+              } }
+              icon="add" color={"white"} size={24}            />
           ),
         })}
       >
