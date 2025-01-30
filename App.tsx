@@ -18,9 +18,9 @@ export default function App() {
   function MyTabs() {
     return (
       <Tab.Navigator screenOptions={{
-        headerStyle : {backgroundColor : GlobalStyles.colors.primary500 },
+        headerStyle : {backgroundColor : GlobalStyles.colors.primary500 , },
         headerTintColor : 'white',
-        headerTitleStyle : { fontWeight : 'bold' },
+        headerTitleStyle : { fontWeight : 'bold',  },
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500  },
         // tabBarLabelStyle : { fontSize: 10, },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
