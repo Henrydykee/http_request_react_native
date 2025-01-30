@@ -1,20 +1,10 @@
-import { View , Text } from "react-native";
+import { View, Text } from "react-native";
 import { useLayoutEffect } from "react";
 import ExpenseOutput from "../components/expenses_output";
 
-function AllExpenseScreen(){
+function AllExpenseScreen() {
 
-    // useLayoutEffect(() => {
-    //     setOptions(() => {})
-        
-    // }, []);
-
-    
-
-    
-
-
-    return <ExpenseOutput expensesPeriod="Total"/>
+    return <ExpenseOutput expensesPeriod="Total" />
 }
 
 export default AllExpenseScreen;

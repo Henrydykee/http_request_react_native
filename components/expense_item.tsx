@@ -1,37 +1,39 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import ExpenseInterface from "../interface/expense_interface";
 import { GlobalStyles } from "../utils/style";
-import {NavigationProp, useNavigation} from "@react-navigation/native"
+import { NavigationProp, useNavigation } from "@react-navigation/native"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 
 
 type RootStackParamList = {
-    'Manage Expense': { };
-  };
+    'Manage Expense': {};
+    navigation?: NativeStackNavigationProp<RootStackParamList>;
+};
 
 function ExpenseItem({ expense }: { expense: ExpenseInterface }) {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    
 
-    function expensePressHandler(){
-        navigation.navigate('Manage Expense', { "": "" })
+
+    function expensePressHandler() {
+        navigation.navigate('Manage Expense', { e: expense, n: navigation });
     }
 
 
     return (
         <Pressable onPress={expensePressHandler}>
-            <View  style= {styles.expenseItem}>
+            <View style={styles.expenseItem}>
                 <View>
-                <Text style={[styles.textBase , styles.textDescription]} >{expense.description}</Text>
-                <Text style={styles.textBase}>{expense.date.toDateString()}</Text>
+                    <Text style={[styles.textBase, styles.textDescription]} >{expense.description}</Text>
+                    <Text style={styles.textBase}>{expense.date.toDateString()}</Text>
                 </View>
                 <View>
-                <View style={styles.amountContainer}>
-                    <Text style ={styles.amountText}>${expense.amount.toFixed(2)}</Text>
+                    <View style={styles.amountContainer}>
+                        <Text style={styles.amountText}>${expense.amount.toFixed(2)}</Text>
+                    </View>
                 </View>
             </View>
-            </View>
-          
+
         </Pressable>
     )
 
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 4,
-        minWidth : 80
+        minWidth: 80
     },
     amountText: {
         fontSize: 18,
