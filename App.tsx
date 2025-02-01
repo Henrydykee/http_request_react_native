@@ -62,7 +62,7 @@ export default function App() {
 
   return (
     <>
-    <StatusBar style="auto" />
+    <StatusBar style="inverted" />
       <ExpenseContextProvider>
       <NavigationContainer>
         <Stack.Navigator
