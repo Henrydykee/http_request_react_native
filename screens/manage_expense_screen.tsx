@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet ,TextInput } from "react-native";
 import ExpenseInterface from "../interface/expense_interface";
 import React, { useContext, useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -6,6 +6,8 @@ import AddExpenseButton from "../components/ui/button";
 import { GlobalStyles } from "../utils/style";
 import CustomButton from "../components/ui/custom_button";
 import { ExpenseContext } from "../store/expense_context";
+import ExpenseForm from "../components/manage_expense/expense_form";
+
 
 
 function ManageExpenseScreen({ route }: { route?: any }) {
@@ -49,7 +51,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
 
   return (
     <View style={styles.conatainer}>
-
+      <ExpenseForm/>
       <View style={styles.deleteButton} >
       <CustomButton
         children={"Cancel"}
