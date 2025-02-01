@@ -68,7 +68,7 @@ function ExpenseContextProvider({ children }: { children: React.ReactNode }) {
   }
 
   function removeExpense(expenseId: string) {
-    dispatch({
+      dispatch({
       type: "REMOVE_EXPENSE",
       expenseId: expenseId,
     });
@@ -88,6 +88,8 @@ function ExpenseContextProvider({ children }: { children: React.ReactNode }) {
     removeExpense,
     updateExpense,
   };
+
+  
 
   return (
     <ExpenseContext.Provider value={value}>

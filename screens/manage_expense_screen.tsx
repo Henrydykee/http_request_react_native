@@ -1,14 +1,17 @@
 import { View, Text, StyleSheet } from "react-native";
 import ExpenseInterface from "../interface/expense_interface";
-import React, { useLayoutEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AddExpenseButton from "../components/ui/button";
 import { GlobalStyles } from "../utils/style";
 import CustomButton from "../components/ui/custom_button";
+import { ExpenseContext } from "../store/expense_context";
+
 
 function ManageExpenseScreen({ route }: { route?: any }) {
   const expense: ExpenseInterface = route.params?.e;
   const navigation = useNavigation();
+  const expenseContext = useContext(ExpenseContext);
 
   const isEditing = expense?.id;
 
@@ -18,9 +21,9 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     });
   }, [navigation, isEditing]);
 
-  function _delectExpense() {
+  function delectExpense() {
+    expenseContext.removeExpense(expense.id);
     navigation.goBack();
-
   }
 
   function cancelHandler() {
@@ -28,13 +31,19 @@ function ManageExpenseScreen({ route }: { route?: any }) {
   }
 
   function saveHandler() {
-  
-    if (isEditing) {
-      // update expense
-    }else{
-      
-    }
 
+    const newExpense = {
+      id: new Date().toString() + Math.random().toString(),
+      description: "Tubes",
+      amount: 10.0,
+      date: new Date()
+    };
+
+    if (isEditing) {
+      expenseContext.updateExpense(expense.id, newExpense);
+    } else {
+      expenseContext.addExpense(newExpense);
+    }
     navigation.goBack();
   }
 
@@ -57,7 +66,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
       {isEditing && (
         <View style={styles.deleteContainer}>
           <AddExpenseButton
-            onPress={_delectExpense}
+            onPress={delectExpense}
             icon={"trash"}
             color={GlobalStyles.colors.error500}
             size={24}
