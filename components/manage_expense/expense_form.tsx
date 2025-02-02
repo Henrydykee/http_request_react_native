@@ -1,18 +1,34 @@
 import { View, StyleSheet } from "react-native";
 import Input from "./input";
+import { useState } from "react";
 
 function ExpenseForm() {
-  function amountChanged() {
-    // update the state with the new amount
+
+  const [inputValue,setInputValue] = useState({
+    amount: '',
+    description: '',
+    date: '',
+  });
+
+  // const [descriptionValue, setDescriptionValue] = useState('');
+  // const [dateValue, setDateValue] = useState('');
+
+  function inputChangedHanler(inputIdentifier: string, enteredValue: string) {
+    setInputValue((currentInput) => {
+      return {
+       ...currentInput,
+        [inputIdentifier]: enteredValue,
+      };
+    });
   }
 
-  function dateChanged() {
-    // update the state with the new amount
-  }
+  // function dateChanged() {
+  //   // update the state with the new amount
+  // }
 
-  function descriptionChanged() {
-    // update the state with the new amount
-  }
+  // function descriptionChanged() {
+  //   // update the state with the new amount
+  // }
 
   return (
     <View style={style.formstyle}>
@@ -25,7 +41,8 @@ function ExpenseForm() {
             keyboardType: "decimal-pad",
             returnKeyType: "next",
             autoFocus: true,
-            onChangeText: amountChanged,
+            onChangeText: inputChangedHanler.bind(null, 'amount'),
+            value: inputValue.amount,
           }}
         />
 
@@ -35,7 +52,8 @@ function ExpenseForm() {
           config={{
             placeholder: " YYYY-MM-DD",
             maxLength: 10,
-            onChangeText: dateChanged,
+            onChangeText: inputChangedHanler.bind(null, 'date'),
+            value: inputValue.date,
           }}
         />
       </View>
@@ -45,7 +63,8 @@ function ExpenseForm() {
         config={{
           multiline: true,
           placeholder: "Enter Description",
-          onChangeText: descriptionChanged,
+          onChangeText: inputChangedHanler.bind(null,'description'),
+          value: inputValue.description,
         }}
       />
     </View>
