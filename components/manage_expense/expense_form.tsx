@@ -21,7 +21,7 @@ function ExpenseForm({
   const [inputValue, setInputValue] = useState({
     amount: expense?.amount.toString() || "",
     description: expense?.description || "",
-    date: expense?.date.toString() || "",
+    date: expense?.date.toISOString().slice(0, 10) || "",
   });
 
   function inputChangedHanler(inputIdentifier: string, enteredValue: string) {
