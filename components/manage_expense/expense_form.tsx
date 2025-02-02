@@ -3,16 +3,26 @@ import Input from "./input";
 import { useState } from "react";
 import CustomButton from "../ui/custom_button";
 import { GlobalStyles } from "../../utils/style";
+import ExpenseInterface from "../../interface/expense_interface";
 
-function ExpenseForm({isEditing, onCancel,onSubmit}:{isEditing: any , onCancel: any, onSubmit: any}) {
+function ExpenseForm({
+  isEditing,
+  onCancel,
+  onSubmit,
+  expense
+}: {
+  isEditing: any;
+  onCancel: any;
+  onSubmit: any;
+  expense?: ExpenseInterface;
+}) {
+
+
   const [inputValue, setInputValue] = useState({
-    amount: "",
-    description: "",
-    date: "",
+    amount: expense?.amount.toString() || "",
+    description: expense?.description || "",
+    date: expense?.date.toString() || "",
   });
-
-  // const [descriptionValue, setDescriptionValue] = useState('');
-  // const [dateValue, setDateValue] = useState('');
 
   function inputChangedHanler(inputIdentifier: string, enteredValue: string) {
     setInputValue((currentInput) => {
@@ -23,15 +33,16 @@ function ExpenseForm({isEditing, onCancel,onSubmit}:{isEditing: any , onCancel: 
     });
   }
 
-  // function dateChanged() {
-  //   // update the state with the new amount
-  // }
+  function submitHandler() {
+    const expenseData: ExpenseInterface = {
+      amount: parseFloat(inputValue.amount?.toString() || "0"),
+      description: inputValue.description,
+      date: new Date(inputValue.date),
+      id: new Date().toString() + Math.random().toString(),
+    };
 
-  // function descriptionChanged() {
-  //   // update the state with the new amount
-  // }
-
-
+    onSubmit(expenseData);
+  }
 
   return (
     <View style={style.formstyle}>
@@ -75,7 +86,7 @@ function ExpenseForm({isEditing, onCancel,onSubmit}:{isEditing: any , onCancel: 
         <CustomButton children={"Cancel"} onPress={onCancel} mode={"flat"} />
         <CustomButton
           children={isEditing ? "Update" : "Add"}
-          onPress={() => {}}
+          onPress={submitHandler}
           mode={""}
         />
       </View>

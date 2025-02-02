@@ -32,27 +32,27 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     navigation.goBack();
   }
 
-    // function saveHandler() {
-  //   const newExpense = {
-  //     id: new Date().toString() + Math.random().toString(),
-  //     description: "Tubes",
-  //     amount: 10.0,
-  //     date: new Date()
-  //   };
+    function saveHandler(expenseData : ExpenseInterface) {
+    // const newExpense = {
+    //   id: new Date().toString() + Math.random().toString(),
+    //   description: "Tubes",
+    //   amount: 10.0,
+    //   date: new Date()
+    // };
 
-  //   if (isEditing) {
-  //     expenseContext.updateExpense(expense.id, newExpense);
-  //   } else {
-  //     expenseContext.addExpense(newExpense);
-  //   }
-  //   navigation.goBack();
-  // }
+    if (isEditing) {
+      expenseContext.updateExpense(expense.id, expenseData);
+    } else {
+      expenseContext.addExpense(expenseData);
+    }
+    navigation.goBack();
+  }
 
 
 
   return (
     <View style={styles.conatainer}>
-      <ExpenseForm isEditing={isEditing} onCancel={cancelHandler} onSubmit={undefined}/>
+      <ExpenseForm expense={expense}  isEditing={isEditing} onCancel={cancelHandler} onSubmit={saveHandler}/>
       {isEditing && (
         <View style={styles.deleteContainer}>
           <AddExpenseButton
