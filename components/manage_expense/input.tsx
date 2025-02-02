@@ -7,7 +7,7 @@ interface InputConfig {
     [key: string]: any;
 }
 
-function Input ({label , config ,style }: {label: any, config?: InputConfig , style?: any}){
+function Input ({label , config ,style , invalid }: {label: any, config?: InputConfig , style?: any ,invalid?: boolean}){
 
     const inputStyles = [styles.input]
 
@@ -16,8 +16,8 @@ function Input ({label , config ,style }: {label: any, config?: InputConfig , st
     }
 
     return <View style={[styles.inputContainer,  style]}>
-        <Text style={styles.label} >{label}</Text>
-        <TextInput style={inputStyles} {...config}/>
+        <Text style={[styles.label, invalid && styles.invalidLabel]} >{label}</Text>
+        <TextInput style={[inputStyles,  invalid && styles.errorText]} {...config}/>
     </View>
 }
 
@@ -34,6 +34,20 @@ const styles = StyleSheet.create({
         color: GlobalStyles.colors.primary100,
         marginBottom: 4
     },
+
+
+
+  errorText: {
+    color: GlobalStyles.colors.error50,
+    margin: 8,
+    backgroundColor : GlobalStyles.colors.error50
+  },
+
+  invalidLabel:{
+    color: GlobalStyles.colors.error50,
+    marginBottom: 4,
+  },
+
     input:{
         backgroundColor: GlobalStyles.colors.primary100,
         padding: 6,
