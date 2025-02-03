@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet ,TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput } from "react-native";
 import ExpenseInterface from "../interface/expense_interface";
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AddExpenseButton from "../components/ui/button";
 import { GlobalStyles } from "../utils/style";
@@ -8,12 +8,12 @@ import CustomButton from "../components/ui/custom_button";
 import { ExpenseContext } from "../store/expense_context";
 import ExpenseForm from "../components/manage_expense/expense_form";
 import { addExpense, removeExpense, updateExpense } from "../network/http";
-
-
+import LoadingOverlay from "../components/ui/loading_overlay";
 
 function ManageExpenseScreen({ route }: { route?: any }) {
   const expense: ExpenseInterface = route.params?.e;
   const navigation = useNavigation();
+  const [isSaving, setIsSaving] = useState(false);
   const expenseContext = useContext(ExpenseContext);
 
   const isEditing = expense?.id;
@@ -24,8 +24,10 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     });
   }, [navigation, isEditing]);
 
-  function delectExpense() {
-    removeExpense(expense.id);
+  async function delectExpense() {
+    setIsSaving(true);
+    await removeExpense(expense.id);
+    setIsSaving(false);
     expenseContext.removeExpense(expense.id);
     navigation.goBack();
   }
@@ -34,30 +36,40 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     navigation.goBack();
   }
 
-    function saveHandler(expenseData : ExpenseInterface) {
+  // function updateExpense(expenseData: ExpenseInterface){
+  //   setIsSaving(true);
+  //   updateExpense(expense.id, expenseData)
+  //    .then(() => setIsSaving(false))
+  //    .catch(() => setIsSaving(false));
+  // }
 
-    // const newExpense = {
-    //   id: new Date().toString() + Math.random().toString(),
-    //   description: "Tubes",
-    //   amount: 10.0,
-    //   date: new Date()
-    // };
-
+  async function saveHandler(expenseData: ExpenseInterface) {
     if (isEditing) {
-      updateExpense(expense.id,expenseData);
+      setIsSaving(true);
+      await updateExpense(expense.id, expenseData);
+      setIsSaving(false);
       expenseContext.updateExpense(expense.id, expenseData);
     } else {
-      addExpense(expenseData)
+      setIsSaving(true);
+      await addExpense(expenseData);
+      setIsSaving(false);
       expenseContext.addExpense(expenseData);
     }
     navigation.goBack();
   }
 
-
+  if (isSaving) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <View style={styles.conatainer}>
-      <ExpenseForm expense={expense}  isEditing={isEditing} onCancel={cancelHandler} onSubmit={saveHandler}/>
+      <ExpenseForm
+        expense={expense}
+        isEditing={isEditing}
+        onCancel={cancelHandler}
+        onSubmit={saveHandler}
+      />
       {isEditing && (
         <View style={styles.deleteContainer}>
           <AddExpenseButton
@@ -81,11 +93,10 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.colors.primary800,
   },
 
-
   deleteButton: {
-    flexDirection :'row',
-    justifyContent: 'center',
-    alignContent : 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
   },
 
   deleteContainer: {

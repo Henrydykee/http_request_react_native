@@ -2,8 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import ExpenseInterface from "../interface/expense_interface";
 
 const SUPABASE_URL = "https://xpkkcxienwuuzgqsjyfu.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhwa2tjeGllbnd1dXpncXNqeWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MTM2OTgsImV4cCI6MjA1NDA4OTY5OH0.TrnQWe4SVYkS_xkG64LRtvjkJpEnrDRiZ9-JA4muzKs";
+const SUPABASE_ANON_KEY =""
 
 // Create an Axios instance with default configuration.
 const api: AxiosInstance = axios.create({
