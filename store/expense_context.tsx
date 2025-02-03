@@ -8,20 +8,24 @@ interface ExpenseContextType {
   addExpense: (expense: ExpenseInterface) => void;
   removeExpense: (expenseId: string) => void;
   updateExpense: (expenseId: string, updatedExpense: ExpenseInterface) => void;
+  setExpense: (expense: ExpenseInterface[]) => void;
+
 }
 
 // Define action types
 type ExpenseAction = 
   | { type: "ADD_EXPENSE"; expense: ExpenseInterface }
   | { type: "REMOVE_EXPENSE"; expenseId: string }
+  | { type: "SET_EXPENSES"; expenses: ExpenseInterface[] }
   | { type: "UPDATE_EXPENSE"; expenseId: string; updatedExpense: ExpenseInterface };
 
 // Create context with proper typing
 export const ExpenseContext = createContext<ExpenseContextType>({
   expenses: [],
-  addExpense: () => {},
-  removeExpense: () => {},
-  updateExpense: () => {},
+  addExpense: () => { },
+  removeExpense: () => { },
+  updateExpense: () => { },
+  setExpense: function (expense: ExpenseInterface[]): void {}
 });
 
 // Type the reducer function with proper action types
@@ -51,14 +55,15 @@ function expensesReducer(state: ExpenseInterface[], action: ExpenseAction): Expe
       updatedExpenses[updateableExpenseIndex] = updatedItem;
       return updatedExpenses;
     }
-
+    case "SET_EXPENSES":
+      return action.expenses;
     default:
       return state;
   }
 }
 
 function ExpenseContextProvider({ children }: { children: React.ReactNode }) {
-  const [expenseState, dispatch] = useReducer(expensesReducer, DUMMY_EXPENSES);
+  const [expenseState, dispatch] = useReducer(expensesReducer, []);
 
   function addExpense(expenseData: ExpenseInterface) {
     dispatch({
@@ -82,11 +87,20 @@ function ExpenseContextProvider({ children }: { children: React.ReactNode }) {
     });
   }
 
+  function setExpenses(expenses : ExpenseInterface[]) {
+    dispatch({
+      type: "SET_EXPENSES",
+      expenses: expenses,
+    });
+  }
+
   const value: ExpenseContextType = {
     expenses: expenseState,
     addExpense,
     removeExpense,
     updateExpense,
+    setExpense: setExpenses,  
+    
   };
 
   

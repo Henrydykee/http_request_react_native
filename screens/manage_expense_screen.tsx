@@ -7,6 +7,7 @@ import { GlobalStyles } from "../utils/style";
 import CustomButton from "../components/ui/custom_button";
 import { ExpenseContext } from "../store/expense_context";
 import ExpenseForm from "../components/manage_expense/expense_form";
+import { addExpense } from "../network/http";
 
 
 
@@ -33,6 +34,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
   }
 
     function saveHandler(expenseData : ExpenseInterface) {
+
     // const newExpense = {
     //   id: new Date().toString() + Math.random().toString(),
     //   description: "Tubes",
@@ -43,6 +45,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     if (isEditing) {
       expenseContext.updateExpense(expense.id, expenseData);
     } else {
+      addExpense(expenseData)
       expenseContext.addExpense(expenseData);
     }
     navigation.goBack();
