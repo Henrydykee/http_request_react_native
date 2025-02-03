@@ -32,19 +32,15 @@ export const ExpenseContext = createContext<ExpenseContextType>({
 function expensesReducer(state: ExpenseInterface[], action: ExpenseAction): ExpenseInterface[] {
   switch (action.type) {
     case "ADD_EXPENSE": {
-      const id = new Date().toString() + Math.random().toString();
+     // const id = new Date().toString() + Math.random().toString();
       return [
-        {
-          ...action.expense,
-          id: id,
-        },
+        action.expense,
         ...state,
       ];
     }
 
     case "REMOVE_EXPENSE":
       return state.filter((expense) => expense.id !== action.expenseId);
-
     case "UPDATE_EXPENSE": {
       const updateableExpenseIndex = state.findIndex(
         (e) => e.id === action.expenseId
@@ -56,7 +52,8 @@ function expensesReducer(state: ExpenseInterface[], action: ExpenseAction): Expe
       return updatedExpenses;
     }
     case "SET_EXPENSES":
-      return action.expenses;
+      const invertedarray = action.expenses.reverse();
+      return invertedarray;
     default:
       return state;
   }
