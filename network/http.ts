@@ -1,112 +1,105 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import ExpenseInterface from "../interface/expense_interface";
 
-
-
 const SUPABASE_URL = "https://xpkkcxienwuuzgqsjyfu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhwa2tjeGllbnd1dXpncXNqeWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MTM2OTgsImV4cCI6MjA1NDA4OTY5OH0.TrnQWe4SVYkS_xkG64LRtvjkJpEnrDRiZ9-JA4muzKs";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhwa2tjeGllbnd1dXpncXNqeWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1MTM2OTgsImV4cCI6MjA1NDA4OTY5OH0.TrnQWe4SVYkS_xkG64LRtvjkJpEnrDRiZ9-JA4muzKs";
 
-export async function addExpense(expense: ExpenseInterface) {
+// Create an Axios instance with default configuration.
+const api: AxiosInstance = axios.create({
+  baseURL: `${SUPABASE_URL}/rest/v1/CRUD`,
+  headers: {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    "Content-Type": "application/json",
+    // For most operations, you may use minimal returns.
+    Prefer: "return=minimal",
+  },
+});
+
+/**
+ * Adds a new expense.
+ * @param expense - The expense details.
+ * @returns The response data from Supabase.
+ */
+export async function addExpense(expense: ExpenseInterface): Promise<any> {
   try {
-    const response = await axios.post(
-      `${SUPABASE_URL}/rest/v1/CRUD`,
-      {
-        id: Math.floor(Math.random() * 1000000).toString(),
-        description: expense.description,
-        amount: expense.amount,
-        date:  expense.date,
-      },
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-      }
-    );
-    return response.data;
+    const payload = {
+      id: Math.floor(Math.random() * 1000000).toString(),
+      description: expense.description,
+      amount: expense.amount,
+      date: expense.date,
+    };
+
+    const { data } = await api.post("", payload);
+    return data;
   } catch (error) {
     console.error("Error adding expense:", error);
     throw error;
   }
 }
 
-
-  export async function getExpenses() {
-    try {
-      const response = await axios.get(
-        `${SUPABASE_URL}/rest/v1/CRUD`,
-        {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            "Content-Type": "application/json",
-             Prefer: "return=minimal",
-          },}
-      );
-
-      console.log(response.data);
-
-      const expense: ExpenseInterface[] = [];
-     // iterate over the response data and create a new ExpenseInterface object for each record
-      for (const item of response.data){
-       const expenseObj ={
-        id : item.id,
-        amount: item.amount,
-        description: item.description,
-        date: new Date(item.date)
-       }
-       expense.push(expenseObj);
-    //    return expense;
-      }
-      return expense;
-    } catch (error) {
-      console.error("Error getting expense:", error);
-      throw error;
-    }
+/**
+ * Retrieves all expenses.
+ * @returns An array of expenses.
+ */
+export async function getExpenses(): Promise<ExpenseInterface[]> {
+  try {
+    const { data } = await api.get("");
+    // Map each item to the ExpenseInterface format.
+    const expenses: ExpenseInterface[] = data.map((item: any) => ({
+      id: item.id,
+      description: item.description,
+      amount: item.amount,
+      date: new Date(item.date),
+    }));
+    return expenses;
+  } catch (error) {
+    console.error("Error getting expenses:", error);
+    throw error;
   }
+}
 
-  export async function updateExpense(id: string, expense: ExpenseInterface) {
-    try {
-      const response = await axios.patch(
-        `${SUPABASE_URL}/rest/v1/CRUD/${id}`,
-        {
-          amount: expense.amount,
-          description: expense.description,
-          date: expense.date,
-        },
-        {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error updating expense:", error);
-      throw error;
-    }
-  }
+/**
+ * Updates an existing expense.
+ * @param id - The ID of the expense to update.
+ * @param expense - The updated expense data.
+ * @returns The updated record(s) from Supabase.
+ */
+export async function updateExpense(
+  id: string,
+  expense: ExpenseInterface
+): Promise<any> {
+  try {
+    const payload = {
+      description: expense.description,
+      amount: expense.amount,
+      date: expense.date,
+    };
 
-  export async function removeExpense(id: string) {
-    try {
-      await axios.delete(
-        `${SUPABASE_URL}/rest/v1/CRUD/${id}`,
-        {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Error removing expense:", error);
-      throw error;
-    }
+    // Override the Prefer header to return the updated record(s).
+    const { data } = await api.patch("", payload, {
+      params: { id: `eq.${id}` },
+      headers: { Prefer: "return=representation" },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error updating expense:", error);
+    throw error;
   }
+}
+
+/**
+ * Removes an expense by ID.
+ * @param id - The ID of the expense to remove.
+ */
+export async function removeExpense(id: string): Promise<void> {
+  try {
+    await api.delete("", {
+      params: { id: `eq.${id}` },
+    });
+  } catch (error) {
+    console.error("Error removing expense:", error);
+    throw error;
+  }
+}

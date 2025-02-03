@@ -7,7 +7,7 @@ import { GlobalStyles } from "../utils/style";
 import CustomButton from "../components/ui/custom_button";
 import { ExpenseContext } from "../store/expense_context";
 import ExpenseForm from "../components/manage_expense/expense_form";
-import { addExpense } from "../network/http";
+import { addExpense, removeExpense, updateExpense } from "../network/http";
 
 
 
@@ -25,6 +25,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
   }, [navigation, isEditing]);
 
   function delectExpense() {
+    removeExpense(expense.id);
     expenseContext.removeExpense(expense.id);
     navigation.goBack();
   }
@@ -43,6 +44,7 @@ function ManageExpenseScreen({ route }: { route?: any }) {
     // };
 
     if (isEditing) {
+      updateExpense(expense.id,expenseData);
       expenseContext.updateExpense(expense.id, expenseData);
     } else {
       addExpense(expenseData)
